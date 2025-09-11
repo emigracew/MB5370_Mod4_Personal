@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Install and load tidyverse packages
 ```{r}
-## install.packages("tidyverse") # Delete this line once installed
+##install.packages("tidyverse") # Delete this line once installed
 library("tidyverse")
 ```
 
@@ -34,7 +34,7 @@ summary(mpg)
 # Create first plot
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = disp, y = hwy))
+  geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
 The plot shows a negative relationship between engine size (displ) and fuel efficiency (hwy). In other words, cars with big engines use more fuel. What does this say about fuel efficiency and engine size?
@@ -90,7 +90,7 @@ ggplot(data = mpg) +
 # Make all points blue
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+  geom_point(mapping = aes(x = displ, y = hwy, color=displ<5))
 ```
 
 
@@ -126,7 +126,7 @@ Note that there are no occurrences of 5 cylinder 4WDs OR RWD vehicles!
 ```{r}
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy)) + 
-  facet_grid(cyl ~ .)
+  facet_grid(. ~ cyl)
   #facet_grid(. ~ cyl) # Alternatively
 
 ```
@@ -135,7 +135,9 @@ ggplot(data = mpg) +
 Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? 
 
 ```{r}
-
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap( ~ class, nrow=3, as.table =TRUE)
 ```
 
 
@@ -143,7 +145,7 @@ Read ?facet_wrap. What does nrow do? What does ncol do? What other options contr
 We already used points:
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displx, y = hwy))
+  geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
 
@@ -194,7 +196,7 @@ ggplot(data = mpg) +
 We already did this one way
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(xx = displ, y = hwy)) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
   geom_smooth(mapping = aes(x = displ, y = hwy))
 ```
 
@@ -229,7 +231,17 @@ Question: what does the "se = FALSE" do?
 2.  Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions.
 
 ```{r}
+ggplot(mpg, aes(x=displ, y=hwy)) +
+  geom_line()
 
+ggplot(mpg, aes(class,hwy))+
+  geom_boxplot()
+
+ggplot(mpg,aes(hwy)) +
+  geom_histogram(binwidth = 2)
+
+ggplot(mpg,aes(hwy)) +
+  geom_area(stat = "bin")
 ```
 
 
@@ -243,6 +255,8 @@ ggplot() +
   geom_point(data = mpg, mapping = aes(x = displ, y = hwy)) + 
   geom_smooth(data = mpg, mapping = aes(x = displ, y = hwy))
 ```
+They do not look the same because the global mappings are the same as the individual mappings.
+
 
 
 # Transformations and stats
@@ -257,6 +271,10 @@ glimpse(diamonds)
 ```{r}
 ggplot(data = diamonds) + 
   geom_bar(mapping = aes(x = cut))
+
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))
+
 ```
 
 # Overriding defaults
@@ -289,6 +307,8 @@ ggplot(data = diamonds) +
 Question: does anyone get the warning that's in the workbook?
 Warning: `stat(prop)` was deprecated in ggplot2 3.4.0.
 If so, can use # geom_bar(mapping = aes(x = cut, y = stage(after_stat = prop), group = 1))
+
+Yes!
 
 # Plotting statistical details
 ```{r}
