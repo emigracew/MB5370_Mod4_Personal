@@ -1,0 +1,45 @@
+---
+title: "QFish Project"
+output: html_document
+date: "2025-09-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 
+
+```{r}
+library(tidyverse)
+library(data.table)
+
+fish <- read.csv("data/export.csv")
+```
+
+
+
+```{r}
+
+
+t <- as.data.frame(t(fish))
+setnames(t, as.character(t[1, ]))  # Set first row as column names
+fish2 <- t[-1, ] 
+rownames(fish2) <- NULL
+fish2
+
+fish2 <- na.omit(fish2)
+
+names(fish2) <- c("Year", "Species Group", "Species","Bribie Island", "Bundaberg", "Cairns", "Capricorn Coast", "Gladstone", "Gold Coast", "Mackay", "Nth Stradbroke Island", "Rainbow Beach", "Sunshine Coast North", "Sunshine Coast South", "Sunshine Coast South and Bribie Island", "Townsville", "Grand Total")
+
+
+
+fishlonger <- fish2 |> 
+  pivot_longer(
+    cols = c("Bribie Island", "Bundaberg", "Cairns", "Capricorn Coast", "Gladstone", "Gold Coast", "Mackay", "Nth Stradbroke Island", "Rainbow Beach", "Sunshine Coast North", "Sunshine Coast South", "Sunshine Coast South and Bribie Island", "Townsville", ), 
+    names_to = "Area", 
+    values_to = "Number Caught")
+
+fishlonger
+```
+
